@@ -12,15 +12,15 @@ class UrlLoader(ABC):
     TODO посмотреть как можно получить информацию с запрещенных сайтов
     TODO если нужно(проанализировать) добавить обработку рядов сайта на тот случай, если нужный не находится сразу
     """
-    def __init__(self, city_name: str):
-        self._google_request = self._get_site_name() + " " + city_name
+    def __init__(self):
+        self._google_request = ""
         self.site_name = ""
 
     def _get_site_name(self):
         return self.site_name
 
     def _get_url_correct(self, url: str):
-        if self.site_name in url:
+        if self._get_site_name() in url:
             return True
 
     def _get_url(self):
@@ -30,7 +30,8 @@ class UrlLoader(ABC):
     def _parse(self, soup: BeautifulSoup):
         pass
 
-    def try_to_parse_weather(self):
+    def try_to_parse_weather(self, city_name: str):
+        self._google_request = self.site_name + " " + city_name
         url = self._get_url()
         if not self._get_url_correct(url):
             return None

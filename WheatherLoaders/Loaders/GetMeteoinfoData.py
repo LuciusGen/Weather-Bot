@@ -5,9 +5,9 @@ from bs4 import BeautifulSoup
 class MeteoinfoLoader(UrlLoader):
     """На сайте на некоторых городах приходит информация и по области,
     таким образом может быть ситуация с некорректной обработкой."""
-    def __init__(self, city_name: str):
+    def __init__(self):
+        super().__init__()
         self.site_name = "meteoinfo"
-        super().__init__(city_name)
 
     def _parse(self, soup: BeautifulSoup):
         all_info = soup.find_all(class_="td_short_gr")
@@ -24,5 +24,5 @@ class MeteoinfoLoader(UrlLoader):
 
 
 if __name__ == '__main__':
-    meteoinfo_loader = MeteoinfoLoader("Пермь")
-    print(meteoinfo_loader.try_to_parse_weather())
+    meteoinfo_loader = MeteoinfoLoader()
+    print(meteoinfo_loader.try_to_parse_weather("Санкт-Петербург"))
