@@ -13,8 +13,3 @@ class RP5Loader(UrlLoader):
         today_weather = tmp_meta_weather.split("Завтра")[0]
 
         return today_weather
-
-
-if __name__ == '__main__':
-    rp5_loader = RP5Loader()
-    print(rp5_loader.try_to_parse_weather("Санкт-Петербург"))

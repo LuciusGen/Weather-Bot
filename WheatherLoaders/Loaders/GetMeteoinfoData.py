@@ -19,10 +19,5 @@ class MeteoinfoLoader(UrlLoader):
         short_night_info = all_info[58].contents[0].contents[0].attrs['title']
 
         return "Днем: Максимальная температура %s, ожидаемые погодные условия: %s \n" \
-               "Ночью: Максимальная температура %s, ожидаемые погодные условия: %s \n" \
+               "Ночью: Максимальная температура %s, ожидаемые погодные условия: %s" \
                % (max_day_t_today, short_day_info, max_night_t_today, short_night_info)
-
-
-if __name__ == '__main__':
-    meteoinfo_loader = MeteoinfoLoader()
-    print(meteoinfo_loader.try_to_parse_weather("Санкт-Петербург"))
