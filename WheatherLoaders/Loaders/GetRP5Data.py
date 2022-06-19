@@ -4,9 +4,9 @@ from bs4 import BeautifulSoup
 
 class RP5Loader(UrlLoader):
     """На сайте rp5 краткая информация о погоде содержится в метаинформации по индексу 1"""
-    def __init__(self, city_name: str):
+    def __init__(self):
+        super().__init__()
         self.site_name = "rp5"
-        super().__init__(city_name)
 
     def _parse(self, soup: BeautifulSoup):
         tmp_meta_weather = soup.find_all("meta")[1].attrs['content']
@@ -16,5 +16,5 @@ class RP5Loader(UrlLoader):
 
 
 if __name__ == '__main__':
-    rp5_loader = RP5Loader("Белебей")
-    print(rp5_loader.try_to_parse_weather())
+    rp5_loader = RP5Loader()
+    print(rp5_loader.try_to_parse_weather("Санкт-Петербург"))
