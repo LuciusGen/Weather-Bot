@@ -13,8 +13,7 @@ main_markup.row('Обратная связь', 'Поддержка проект�
 weather_loaders = {
     "rp5": GetRP5Data.RP5Loader(),
     "Meteoinfo": GetMeteoinfoData.MeteoinfoLoader(),
-    "Foreca": GetForecaData.ForecaLoader(),
-    "Accuweather": GetAccuweatherData.AccuweatherLoader()
+    "Foreca": GetForecaData.ForecaLoader()
 }
 
 os.chdir("database")
