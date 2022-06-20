@@ -1,5 +1,5 @@
 from googlesearch import search
-from urllib import request
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 from abc import ABC, abstractmethod
 
@@ -37,9 +37,11 @@ class UrlLoader(ABC):
             return None
 
         try:
-            html_file = request.urlopen(url)
+            req = Request(url)
+            req.add_header('User-Agent', 'PostmanRuntime/7.6.0')
+            html_file = urlopen(req)
             soup = BeautifulSoup(html_file, "html.parser")
 
             return self._parse(soup)
-        except:
+        except Exception:
             return None

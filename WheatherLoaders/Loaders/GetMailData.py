@@ -27,8 +27,3 @@ class MailLoader(UrlLoader):
                 return i
         else:
             return None
-
-
-if __name__ == '__main__':
-    mail_loader = MailLoader()
-    print(mail_loader.try_to_parse_weather("Санкт-Петербург"))
