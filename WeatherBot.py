@@ -61,7 +61,7 @@ def send_text(message):
     """Buttons settings"""
     if message.text == 'Получить погоду':
         user_id = str(message.chat.id)
-        if not db_loader.check_user_in_db(user_id):
+        if db_loader.check_user_in_db(user_id):
             city = db_loader.select_city(user_id)[1]
             sites = db_loader.select_sites(user_id)
             weather_res = []
@@ -99,9 +99,4 @@ def setup_form(message):
     bot.send_message(main_dev_id, text + "\n User_id = " + str(message.chat.id))
 
 
-if __name__ == "__main__":
-    while True:
-        try:
-            bot.polling(none_stop=True)
-        except Exception:
-            pass
+bot.polling(none_stop=True)

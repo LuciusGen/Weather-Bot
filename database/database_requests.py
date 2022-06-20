@@ -25,7 +25,7 @@ class DatabaseRequests:
             user_sites = self.__db_cursor.fetchall()[0][1:]
             user_res_sites = []
             for i in range(len(user_sites)):
-                if user_sites[i] == 1:
+                if user_sites[i] == "1":
                     user_res_sites.append(self.sites_in_table[i])
             return user_res_sites
         except Exception:
@@ -118,5 +118,5 @@ class DatabaseRequests:
 
     def check_user_in_db(self, user_id):
         if self.select_city(user_id) and self.select_sites(user_id) and self.select_time(user_id):
-            return False
-        return True
+            return True
+        return False
