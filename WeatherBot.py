@@ -4,7 +4,7 @@ from WheatherLoaders.Loaders import GetMailData, GetMeteoinfoData, GetRP5Data, G
     GetGismeteoData, GetYandexData, GetAccuweatherData
 from database.database_requests import DatabaseRequests
 
-bot = telebot.TeleBot(os.environ["token"])
+bot = telebot.TeleBot(os.getenv("token"))
 main_dev_id = 370493821
 
 main_markup = telebot.types.ReplyKeyboardMarkup()
