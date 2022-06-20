@@ -12,11 +12,8 @@ main_markup.row('Получить погоду', 'Изменить настро�
 main_markup.row('Обратная связь', 'Поддержка проекта')
 weather_loaders = {
     "rp5": GetRP5Data.RP5Loader(),
-    "Mail": GetMailData.MailLoader(),
     "Meteoinfo": GetMeteoinfoData.MeteoinfoLoader(),
-    "Yandex": GetYandexData.YandexLoader(),
     "Foreca": GetForecaData.ForecaLoader(),
-    "Gismeteo": GetGismeteoData.GismeteoLoader(),
     "Accuweather": GetAccuweatherData.AccuweatherLoader()
 }
 
