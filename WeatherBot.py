@@ -116,10 +116,10 @@ def setup_form(message):
     bot.send_message(main_dev_id, text + "\n User_id = " + str(message.chat.id))
 
 
-@repeat(every(1).minutes)
+@repeat(every(1).hours)
 def load_weather_by_hour():
     time_zone = pytz.timezone('Europe/Moscow')
-    now_hour = datetime.datetime.now().astimezone(tz=time_zone).minute % 10
+    now_hour = datetime.datetime.now().astimezone(tz=time_zone).hour
 
     get_weather_by_user_time(now_hour)
 
