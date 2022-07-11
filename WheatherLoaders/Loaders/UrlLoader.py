@@ -1,7 +1,8 @@
-from googlesearch import search
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
 from abc import ABC, abstractmethod
+from urllib.request import Request, urlopen
+
+from bs4 import BeautifulSoup
+from googlesearch import search
 
 
 class UrlLoader(ABC):
@@ -12,6 +13,7 @@ class UrlLoader(ABC):
     TODO посмотреть как можно получить информацию с запрещенных сайтов
     TODO если нужно(проанализировать) добавить обработку рядов сайта на тот случай, если нужный не находится сразу
     """
+
     def __init__(self):
         self._google_request = ""
         self.site_name = ""

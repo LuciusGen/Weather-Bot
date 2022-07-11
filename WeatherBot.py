@@ -1,17 +1,18 @@
+import datetime
 import os
 import threading
-
-from schedule import every, repeat, run_pending
 import time
+
 import pytz
 import telebot
-from WheatherLoaders.Loaders import GetMailData, GetMeteoinfoData, GetRP5Data, GetForecaData, \
-    GetGismeteoData, GetYandexData, GetAccuweatherData
+from schedule import every, repeat, run_pending
+
+from WheatherLoaders.Loaders import GetMeteoinfoData, GetRP5Data, GetForecaData
 from database.database_requests import DatabaseRequests
-import datetime
 
 bot = telebot.TeleBot(os.getenv("token"))
-main_dev_id = 370493821
+main_dev_id = os.getenv("DEV_ID")
+donate_url = os.getenv("DONATE")
 
 main_markup = telebot.types.ReplyKeyboardMarkup()
 main_markup.row('Получить погоду', 'Изменить настройки')
@@ -61,7 +62,8 @@ def setup_time(message):
                      "Спасибо, настройка успешно завершена. \n"
                      "Получившееся информация: \n"
                      "Время: " + db_loader.select_time(user_id=user_id).hour + "\n"
-                     "Город: " + db_loader.select_city(user_id=user_id) + "\n")
+                                                                               "Город: " + db_loader.select_city(
+                         user_id=user_id) + "\n")
 
 
 @bot.message_handler(content_types=['text'])
@@ -76,11 +78,11 @@ def send_text(message):
             else:
                 bot.send_message(message.chat.id,
                                  "У нас не получилось найти информацию ни в одном из ресурсов,"
-                                "попробуйте изменить настройки")
+                                 "попробуйте изменить настройки")
         else:
             bot.send_message(message.chat.id,
-                         "Мы не нашли информацию о вас в базе данных, пожалуйста введите команду /start"
-                         " и введите информацию")
+                             "Мы не нашли информацию о вас в базе данных, пожалуйста введите команду /start"
+                             " и введите информацию")
 
     if message.text == 'Изменить настройки':
         # TODO получить текущие настройки и сделать удобный инфтерфейс для их изменения
@@ -92,7 +94,10 @@ def send_text(message):
         bot.register_next_step_handler(sent, setup_form)
 
     if message.text == 'Поддержка проекта':
-        # TODO добавить ссылку на донат проекту
+        bot.send_message(message.chat.id,
+                         "Для поддержки нашего проекта используйте следующую ссылку. "
+                         "Ваша поддержка позволит нам работать более активно.")
+        bot.send_message(message.chat.id, donate_url)
         pass
 
 
@@ -130,7 +135,7 @@ def get_weather_by_user_time(now_hour: int):
     if users_and_time is None:
         return
 
-    if type(users_and_time) is not list: # if one user with such time
+    if type(users_and_time) is not list:  # if one user with such time
         users_and_time = [users_and_time]
 
     for user, _ in users_and_time:

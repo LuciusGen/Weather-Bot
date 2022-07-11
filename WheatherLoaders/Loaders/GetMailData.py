@@ -1,10 +1,12 @@
-from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 from bs4 import BeautifulSoup
 from googlesearch import search
+
+from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class MailLoader(UrlLoader):
     """На данном сайте картинка содержит в себе информацию о погоде"""
+
     def __init__(self):
         super().__init__()
         self.site_name = "mail погода"

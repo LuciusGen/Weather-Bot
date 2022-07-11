@@ -1,9 +1,11 @@
-from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 from bs4 import BeautifulSoup
+
+from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class ForecaLoader(UrlLoader):
     """На сайте rp5 краткая информация о погоде содержится в метаинформации по индексу 1"""
+
     def __init__(self):
         super().__init__()
         self.site_name = "foreca погода"

@@ -1,10 +1,12 @@
-from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 from bs4 import BeautifulSoup
 from googlesearch import search
+
+from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class YandexLoader(UrlLoader):
     """На сайте rp5 краткая информация о погоде содержится в метаинформации по индексу 1"""
+
     def __init__(self):
         super().__init__()
         self.site_name = "яндекс погода"
@@ -21,7 +23,8 @@ class YandexLoader(UrlLoader):
             return None
 
     def _parse(self, soup: BeautifulSoup):
-        weather_info = soup.find_all(class_="forecast-briefly__day forecast-briefly__day_sunday forecast-briefly__day_weekend swiper-slide")
+        weather_info = soup.find_all(
+            class_="forecast-briefly__day forecast-briefly__day_sunday forecast-briefly__day_weekend swiper-slide")
         today_info = weather_info[0].contents[0].contents[0].contents
 
         day_info = today_info[3].contents[1].contents[0]

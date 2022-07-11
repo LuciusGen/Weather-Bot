@@ -1,4 +1,5 @@
 import os
+
 from database.database_requests import DatabaseRequests
 
 os.chdir("../database")
