@@ -26,8 +26,10 @@ class GismeteoLoader(UrlLoader):
         today_info = soup.find_all(class_="weathertab weathertab-block tooltip")
         short_info = today_info[0].attrs["data-text"]
         night_t = \
-        today_info[0].contents[0].contents[0].contents[2].contents[0].contents[0].contents[0].contents[0].contents[0]
+            today_info[0].contents[0].contents[0].contents[2].contents[0].contents[0].contents[0].contents[0].contents[
+                0]
         day_t = \
-        today_info[0].contents[0].contents[0].contents[2].contents[0].contents[0].contents[1].contents[0].contents[0]
+            today_info[0].contents[0].contents[0].contents[2].contents[0].contents[0].contents[1].contents[0].contents[
+                0]
 
         return "Температура днём : %s, ночью : %s, ожидаемые погодные условия : %s" % (day_t, night_t, short_info)

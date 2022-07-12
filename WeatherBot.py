@@ -6,6 +6,7 @@ import time
 import pytz
 import telebot
 from schedule import every, repeat, run_pending
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from WheatherLoaders.Loaders import GetMeteoinfoData, GetRP5Data, GetForecaData
 from database.database_requests import DatabaseRequests
@@ -15,7 +16,7 @@ main_dev_id = os.getenv("DEV_ID")
 donate_url = os.getenv("DONATE")
 
 main_markup = telebot.types.ReplyKeyboardMarkup()
-main_markup.row('Получить погоду', 'Изменить настройки')
+main_markup.row('Получить погоду', 'Настройки')
 main_markup.row('Обратная связь', 'Поддержка проекта')
 weather_loaders = {
     "rp5": GetRP5Data.RP5Loader(),
@@ -43,12 +44,21 @@ def print_start_info(message: telebot.types.Message) -> None:
     bot.register_next_step_handler(sent, setup_city)
 
 
+@bot.message_handler(commands=["help"])
+def print_start_info(message: telebot.types.Message) -> None:
+    bot.send_message(message.chat.id,
+                     "\n".join((r"Я мастер погоды.",
+                                "Я позволяю получить информацию о погоде из различных источников. \n"
+                                "Источники погоды: " + ", ".join(weather_loaders.keys())))
+                     )
+
+
 def setup_city(message):
     user_id = str(message.chat.id)
     city = message.text
     db_loader.insert_city(user_id, city)
     sent = bot.send_message(message.chat.id,
-                            "Пожалуйста введите время(по Москве), в которое вам удобно получать актуальную погоду")
+                            "Пожалуйста введите час(по Москве), в которое вам удобно получать актуальную погоду")
     bot.register_next_step_handler(sent, setup_time)
 
 
@@ -61,9 +71,10 @@ def setup_time(message):
     bot.send_message(message.chat.id,
                      "Спасибо, настройка успешно завершена. \n"
                      "Получившееся информация: \n"
-                     "Время: " + db_loader.select_time(user_id=user_id).hour + "\n"
-                                                                               "Город: " + db_loader.select_city(
-                         user_id=user_id) + "\n")
+                     "Время: {} \n"
+                     "Город: {}"
+                     .format(db_loader.select_time(user_id=user_id)[1].hour, db_loader.select_city(user_id=user_id)[1])
+                     )
 
 
 @bot.message_handler(content_types=['text'])
@@ -84,8 +95,15 @@ def send_text(message):
                              "Мы не нашли информацию о вас в базе данных, пожалуйста введите команду /start"
                              " и введите информацию")
 
-    if message.text == 'Изменить настройки':
-        # TODO получить текущие настройки и сделать удобный инфтерфейс для их изменения
+    if message.text == 'Настройки':
+        user_id = str(message.chat.id)
+        user_city = db_loader.select_city(user_id)[1]
+        user_time = db_loader.select_time(user_id)[1].hour
+
+        bot.send_message(message.chat.id,
+                         "Ваш текущий город {}\n"
+                         "Ваше текущее время {}".format(user_city, user_time),
+                         reply_markup=update_settings_markup())
         pass
 
     if message.text == 'Обратная связь':
@@ -99,6 +117,48 @@ def send_text(message):
                          "Ваша поддержка позволит нам работать более активно.")
         bot.send_message(message.chat.id, donate_url)
         pass
+
+
+def update_settings_markup():
+    markup = InlineKeyboardMarkup()
+    markup.row_width = 2
+    markup.add(InlineKeyboardButton("Город", callback_data="city"),
+               InlineKeyboardButton("Время", callback_data="time"))
+    return markup
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    if call.data == "city":
+        sent = bot.send_message(call.message.chat.id, "Введите ваш текущий город")
+        bot.register_next_step_handler(sent, update_city)
+    elif call.data == "time":
+        sent = bot.send_message(call.message.chat.id, "Введите время, удобное для получения погоды")
+        bot.register_next_step_handler(sent, update_time)
+
+
+def update_city(message):
+    user_id = str(message.chat.id)
+    db_loader.update_city(user_id, message.text)
+    user_city = db_loader.select_city(user_id)[1]
+    user_time = db_loader.select_time(user_id)[1].hour
+
+    bot.send_message(message.chat.id,
+                     "Ваш текущий город {} \n "
+                     "Ваше текущее время {}".format(user_city, user_time),
+                     reply_markup=update_settings_markup())
+
+
+def update_time(message):
+    user_id = str(message.chat.id)
+    db_loader.update_time(user_id, message.text)
+    user_city = db_loader.select_city(user_id)[1]
+    user_time = db_loader.select_time(user_id)[1].hour
+
+    bot.send_message(message.chat.id,
+                     "Ваш текущий город {} \n "
+                     "Ваше текущее время {}".format(user_city, user_time),
+                     reply_markup=update_settings_markup())
 
 
 def get_weather(user_id: str):
@@ -121,7 +181,7 @@ def setup_form(message):
     bot.send_message(main_dev_id, text + "\n User_id = " + str(message.chat.id))
 
 
-@repeat(every(1).hours)
+@repeat(every().hour)
 def load_weather_by_hour():
     time_zone = pytz.timezone('Europe/Moscow')
     now_hour = datetime.datetime.now().astimezone(tz=time_zone).hour

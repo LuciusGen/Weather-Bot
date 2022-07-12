@@ -2,7 +2,7 @@ import os
 
 import psycopg2
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 class DatabaseRequests:
@@ -66,9 +66,10 @@ class DatabaseRequests:
         except Exception:
             return None
 
-    def insert_time(self, user_id: str, time):
+    def insert_time(self, user_id: str, hour):
         db_connector = psycopg2.connect(DATABASE_URL)
         db_cursor = db_connector.cursor()
+        time = "%s:00:00" % hour
 
         try:
             db_cursor.execute(
@@ -77,7 +78,7 @@ class DatabaseRequests:
                 (user_id, time)
             )
             db_connector.commit()
-        except psycopg2.IntegrityError:
+        except Exception:
             pass
 
     def insert_sites(self, user_id: str):
@@ -91,7 +92,7 @@ class DatabaseRequests:
                 (user_id,)
             )
             db_connector.commit()
-        except psycopg2.IntegrityError:
+        except Exception:
             pass
 
     def insert_city(self, user_id: str, city):
@@ -105,7 +106,7 @@ class DatabaseRequests:
                 (user_id, city)
             )
             db_connector.commit()
-        except psycopg2.IntegrityError:
+        except Exception:
             pass
 
     def insert_new_user(self, user_id: str, city: str, time):
@@ -113,29 +114,35 @@ class DatabaseRequests:
         self.insert_sites(user_id)
         self.insert_time(user_id, time)
 
-    def update_time(self, user_id, time):
+    def update_time(self, user_id, hour):
         db_connector = psycopg2.connect(DATABASE_URL)
         db_cursor = db_connector.cursor()
-
-        db_cursor.execute("UPDATE time "
-                          "SET time = %s "
-                          "WHERE user_id = %s",
-                          (time,
-                           user_id)
-                          )
-        db_connector.commit()
+        time = "%s:00:00" % hour
+        try:
+            db_cursor.execute("UPDATE time "
+                              "SET time = %s "
+                              "WHERE user_id = %s",
+                              (time,
+                               user_id)
+                              )
+            db_connector.commit()
+        except Exception:
+            return None
 
     def update_city(self, user_id, city):
         db_connector = psycopg2.connect(DATABASE_URL)
         db_cursor = db_connector.cursor()
 
-        db_cursor.execute("UPDATE city "
-                          "SET city = %s"
-                          "WHERE user_id = %s",
-                          (city,
-                           user_id)
-                          )
-        db_connector.commit()
+        try:
+            db_cursor.execute("UPDATE city "
+                              "SET city = %s"
+                              "WHERE user_id = %s",
+                              (city,
+                               user_id)
+                              )
+            db_connector.commit()
+        except Exception:
+            return None
 
     def update_site(self, user_id: str, sites_to_update: list):
         db_connector = psycopg2.connect(DATABASE_URL)
@@ -145,16 +152,19 @@ class DatabaseRequests:
         for i in sites_to_update:
             cites_in_format[self.sites_in_table.index(i)] = True
 
-        db_cursor.execute(
-            "UPDATE sites "
-            "SET rp5 = %s, meteoinfo = %s, foreca = %s "
-            "WHERE user_id = %s ",
-            (cites_in_format[0],
-             cites_in_format[1],
-             cites_in_format[2],
-             user_id)
-        )
-        db_connector.commit()
+        try:
+            db_cursor.execute(
+                "UPDATE sites "
+                "SET rp5 = %s, meteoinfo = %s, foreca = %s "
+                "WHERE user_id = %s ",
+                (cites_in_format[0],
+                 cites_in_format[1],
+                 cites_in_format[2],
+                 user_id)
+            )
+            db_connector.commit()
+        except Exception:
+            return None
 
     def check_user_in_db(self, user_id):
         if self.select_city(user_id) and self.select_sites(user_id) and self.select_time(user_id):
