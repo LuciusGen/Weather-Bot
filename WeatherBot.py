@@ -1,4 +1,5 @@
 import datetime
+import logging
 import os
 import threading
 import time
@@ -222,10 +223,12 @@ def get_weather_by_user_time(now_hour: int):
 
 
 def run_bot():
-    try:
-        bot.polling(none_stop=True, interval=0)
-    except Exception:
-        pass
+    while True:
+        try:
+            bot.polling(none_stop=True, interval=0)
+        except Exception:
+            time.sleep(5)
+            logging.error("Connection error")
 
 
 def run_schedulers():
