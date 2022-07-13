@@ -11,6 +11,8 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from WheatherLoaders.Loaders import GetMeteoinfoData, GetRP5Data, GetForecaData
 from database.database_requests import DatabaseRequests
 
+telepot.api.set_proxy('http://proxy.server:3128')
+
 bot = telebot.TeleBot(os.getenv("token"))
 main_dev_id = os.getenv("DEV_ID")
 donate_url = os.getenv("DONATE")
