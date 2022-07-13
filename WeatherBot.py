@@ -182,10 +182,12 @@ def get_weather(user_id: str):
         sites = db_loader.select_sites(user_id)
         weather_res = []
         for i in sites:
-            weather_info = weather_loaders[i].try_to_parse_weather(city)
-            if weather_info:
-                weather_res.append("Инф. с сайта: " + i + "\n" + weather_info)
-
+            try:
+                weather_info = weather_loaders[i].try_to_parse_weather(city)
+                if weather_info:
+                    weather_res.append("Инф. с сайта: " + i + "\n" + weather_info)
+            except Exception:
+                continue
         return weather_res
 
     return None
