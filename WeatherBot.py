@@ -65,6 +65,13 @@ def setup_city(message):
 def setup_time(message):
     user_id = str(message.chat.id)
     time = message.text
+    try:
+        time = int(time)
+    except Exception:
+        bot.send_message(message.chat.id,
+                         "Вы неправильно ввели время. Время будет назначено на 12 часов")
+        time = "12"
+
     db_loader.insert_time(user_id, time)
     db_loader.insert_sites(message.chat.id)
 
@@ -151,7 +158,15 @@ def update_city(message):
 
 def update_time(message):
     user_id = str(message.chat.id)
-    db_loader.update_time(user_id, message.text)
+    time = message.text
+
+    try:
+        time = int(time)
+        db_loader.update_time(user_id, time)
+    except Exception:
+        bot.send_message(message.chat.id,
+                         "Вы неправильно ввели время. Время не будет изменено")
+
     user_city = db_loader.select_city(user_id)[1]
     user_time = db_loader.select_time(user_id)[1].hour
 
