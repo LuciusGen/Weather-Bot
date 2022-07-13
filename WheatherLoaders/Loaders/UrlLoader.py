@@ -7,11 +7,7 @@ from googlesearch import search
 
 class UrlLoader(ABC):
     """
-    Разрешенные сайты: rp5.ru, meteoinfo, world-weather, погода mail.ru
-    Запрещенные сайты: гисметео, яндекс, accuweather, foreca, google
-    Обработанные сайты: rp5.ru, meteoinfo, погода mail.ru
-    TODO посмотреть как можно получить информацию с запрещенных сайтов
-    TODO если нужно(проанализировать) добавить обработку рядов сайта на тот случай, если нужный не находится сразу
+    Main abstract class to load weather information
     """
 
     def __init__(self):

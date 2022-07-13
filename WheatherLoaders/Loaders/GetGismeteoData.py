@@ -5,7 +5,7 @@ from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class GismeteoLoader(UrlLoader):
-    """На сайте rp5 краткая информация о погоде содержится в метаинформации по индексу 1"""
+    """Gismeteo weather information loader"""
 
     def __init__(self):
         super().__init__()

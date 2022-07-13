@@ -5,7 +5,7 @@ from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class MailLoader(UrlLoader):
-    """На данном сайте картинка содержит в себе информацию о погоде"""
+    """Mail weather information loader"""
 
     def __init__(self):
         super().__init__()

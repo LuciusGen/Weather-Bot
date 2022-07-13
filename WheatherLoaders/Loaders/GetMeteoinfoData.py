@@ -4,8 +4,7 @@ from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class MeteoinfoLoader(UrlLoader):
-    """На сайте на некоторых городах приходит информация и по области,
-    таким образом может быть ситуация с некорректной обработкой."""
+    """Meteoifo weather information loader"""
 
     def __init__(self):
         super().__init__()

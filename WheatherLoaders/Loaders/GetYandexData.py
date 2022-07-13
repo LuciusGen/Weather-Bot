@@ -5,7 +5,7 @@ from WheatherLoaders.Loaders.UrlLoader import UrlLoader
 
 
 class YandexLoader(UrlLoader):
-    """На сайте rp5 краткая информация о погоде содержится в метаинформации по индексу 1"""
+    """Yandex weather information loader"""
 
     def __init__(self):
         super().__init__()
