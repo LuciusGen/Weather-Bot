@@ -227,7 +227,7 @@ def run_bot():
         try:
             bot.polling(none_stop=True, interval=0)
         except Exception:
-            time.sleep(5)
+            time.sleep(200)
             logging.error("Connection error")
 
 
