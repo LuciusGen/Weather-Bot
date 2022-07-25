@@ -227,14 +227,14 @@ def run_bot():
         try:
             bot.polling(none_stop=True, interval=0)
         except Exception:
-            time.sleep(200)
+            time.sleep(5)
             logging.error("Connection error")
 
 
 def run_schedulers():
     while True:
         run_pending()
-        time.sleep(1)
+        time.sleep(60)
 
 
 if __name__ == "__main__":
